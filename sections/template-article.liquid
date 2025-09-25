@@ -1,0 +1,94 @@
+<article class="py-8">
+  {% for block in section.blocks %}
+    {% case block.type %}
+      {% when 'title' %}
+          <div class="flex items-center justify-center">
+               <div class="max-w-7xl text-center">
+                    <a href="{{ blog.url }}" class="text-base uppercase text-gray-500 hover:text-gray-900 font-bold">{{ blog.title }}</a>
+                    <h1 class="text-4xl md:text-6xl font-medium">{{ article.title }}</h1>
+               </div>
+          </div>
+
+      {% when 'content' %}
+          <div class="flex items-center justify-center">
+                    <div class="max-w-4xl">
+               {{ article.content }}
+               </div>
+          </div>
+
+      {% when 'featured_image' %}
+          <div class="max-w-7xl bg-blue-100 rounded-lg mx-2 md:mx-auto overflow-hidden my-4">
+
+        {% if article.image %}
+          
+          <img src="{{ article.image | image_url: width: 1200 }}" alt="{{ article.image.alt | escape }}" class="w-full h-80 md:h-96 object-cover object-center" />
+            {% else %}
+               <img src="https://placehold.co/1200x600?text=No+Image" alt="No image available" class="w-full h-80 md:h-96 object-cover object-center"/>
+
+        {% endif %}
+        </div>
+
+      {% when 'author' %}
+          <div class="flex items-center justify-center">
+               <div class="max-w-7xl text-center">
+                    {% if section.settings.display_author_details %}
+                         <small>By {{ article.author }}</small>
+                    {% endif %}
+               </div>
+          </div>
+
+      {% when 'date' %}
+          <div class="flex items-center justify-center">
+               <div class="max-w-7xl text-center">
+                    {% if section.settings.display_date %}
+                         <time datetime="{{ article.published_at | date: '%Y-%m-%d' }}">{{ article.published_at | date: "%B %d, %Y" }}</time>
+                    {% endif %}
+               </div>
+          </div>
+    {% endcase %}
+  {% endfor %}
+</article>
+
+{% schema %}
+     {
+     "name": "Article template",
+     "settings": [
+          {
+               "type": "checkbox",
+               "id": "display_author_details",
+               "label": "Display author details",
+               "default": true
+          },
+          {
+               "type": "checkbox",
+               "id": "display_date",
+               "label": "Display article date",
+               "default": true
+          }
+     ],
+     "blocks": [
+          {
+          "type": "title",
+          "name": "Title"
+          },
+          {
+          "type": "content",
+          "name": "Content"
+          },
+          {
+          "type": "featured_image",
+          "name": "Featured image"
+          },
+          {
+          "type": "author",
+          "name": "Author"
+          },
+          {
+          "type": "date",
+          "name": "Date"
+          }
+     ]
+     
+     
+     }
+{% endschema %}
