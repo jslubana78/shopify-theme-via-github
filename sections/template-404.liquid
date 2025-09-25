@@ -1,0 +1,47 @@
+<div class="py-20 text-center">
+  <h1 class="text-4xl font-bold mb-4">
+    {{ section.settings.title }}
+  </h1>
+
+  <p class="text-gray-600 mb-6">
+    {{ section.settings.message }}
+  </p>
+
+  {% assign button_url = section.settings.button_url | default: routes.root_url %}
+
+  <a href="{{ button_url }}" class="px-6 py-3 bg-black text-white rounded-md hover:bg-gray-800">
+    {{ section.settings.button_label }}
+  </a>
+</div>
+
+{% schema %}
+{
+  "name": "404 page",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "Page not found"
+    },
+    {
+      "type": "textarea",
+      "id": "message",
+      "label": "Message",
+      "default": "The page you are looking for doesn’t exist or has been moved."
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "Back to Home"
+    },
+    {
+      "type": "url",
+      "id": "button_url",
+      "label": "Button URL",
+      "default": "/"
+    }
+  ]
+}
+{% endschema %}

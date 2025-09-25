@@ -1,0 +1,10 @@
+{
+  "name": "404 and password",
+  "sections": {
+    "main": {
+      "type": "template-404",
+      "settings": {}
+    }
+  },
+  "order": ["main"]
+}
