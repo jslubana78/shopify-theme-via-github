@@ -1,18 +1,18 @@
-<article class="py-8">
+<article class="py-8" itemscope itemtype="https://schema.org/BlogPosting">
   {% for block in section.blocks %}
     {% case block.type %}
       {% when 'title' %}
           <div class="flex items-center justify-center">
                <div class="max-w-7xl text-center">
                     <a href="{{ blog.url }}" class="text-base uppercase text-gray-500 hover:text-gray-900 font-bold">{{ blog.title }}</a>
-                    <h1 class="text-4xl md:text-6xl font-medium">{{ article.title }}</h1>
+                    <h1 class="text-4xl md:text-6xl font-medium" itemprop="headline">{{ article.title }}</h1>
                </div>
           </div>
 
       {% when 'content' %}
           <div class="flex items-center justify-center">
-                    <div class="max-w-4xl">
-               {{ article.content }}
+               <div class="max-w-4xl" itemprop="articleBody">
+                    {{ article.content }}
                </div>
           </div>
 
@@ -30,9 +30,9 @@
 
       {% when 'author' %}
           <div class="flex items-center justify-center">
-               <div class="max-w-7xl text-center">
+               <div class="max-w-7xl text-center" itemprop="author" itemscope itemtype="https://schema.org/Person">
                     {% if section.settings.display_author_details %}
-                         <small>By {{ article.author }}</small>
+                         <small itemprop="name">By {{ article.author }}</small>
                     {% endif %}
                </div>
           </div>
@@ -141,6 +141,43 @@
      </div>
   {% endif %}
 </article>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": {{ article.title | json }},
+  "description": {{ article.excerpt_or_content | strip_html | truncate: 160 | json }},
+  "articleBody": {{ article.content | strip_html | json }},
+  {% if article.image %}
+    "image": [{{ article.image | image_url: width: 1200 | prepend: shop.url | json }}],
+  {% else %}
+    "image": [{{ 'placeholder-image.png' | asset_url | prepend: shop.url | json }}],
+  {% endif %}
+  "author": {
+    "@type": "Person",
+    "name": {{ article.author | json }}
+  },
+  "dateCreated": "{{ article.created_at | default }}",
+  "datePublished": "{{ article.published_at | default }}",
+  "dateModified": "{{ article.updated_at | default }}",
+  "publisher": {
+    "@type": "Organization",
+    "name": {{ shop.name | json }}
+    {% if settings.logo %}
+      "logo": {
+        "@type": "ImageObject",
+        "url": {{ settings.logo | image_url: width: 600 | prepend: shop.url | json }}
+      }
+    {% endif %}
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": {{ article.url | prepend: shop.url | json }}
+  }
+}
+</script>
+
 
 
 {% schema %}
