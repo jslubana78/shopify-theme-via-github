@@ -70,25 +70,9 @@
 
           <!-- Pagination -->
           {% if paginate.pages > 1 %}
-          <div class="flex justify-between items-center mt-6">
-               {% if paginate.previous %}
-               <a href="{{ paginate.previous.url }}" class="px-4 py-2 border rounded-lg text-sm text-gray-600 hover:bg-gray-100">
-               ← Previous
-               </a>
-               {% else %}
-               <span class="px-4 py-2 text-sm text-gray-400">← Previous</span>
-               {% endif %}
 
-               <span class="text-sm text-gray-500">Page {{ paginate.current_page }} of {{ paginate.pages }}</span>
-
-               {% if paginate.next %}
-               <a href="{{ paginate.next.url }}" class="px-4 py-2 border rounded-lg text-sm text-gray-600 hover:bg-gray-100">
-               Next →
-               </a>
-               {% else %}
-               <span class="px-4 py-2 text-sm text-gray-400">Next →</span>
-               {% endif %}
-          </div>
+               {% render 'pagination', paginate: paginate %}
+          
           {% endif %}
      {% endpaginate %}
      </div>

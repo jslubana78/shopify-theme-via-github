@@ -1,0 +1,19 @@
+<!-- Pagination -->
+     <div class="mt-10">
+          <nav class="mt-12 flex items-center justify-center space-x-2">
+               {% if paginate.previous %}
+               <a href="{{ paginate.previous.url }}" class="px-3 py-2 border rounded-md text-sm text-gray-600 hover:bg-gray-100">← Prev</a>
+               {% endif %}
+               {% for part in paginate.parts %}
+                    {% if part.is_link %}
+                         <a href="{{ part.url }}" class="px-3 py-2 border rounded-md text-sm text-gray-600 hover:bg-gray-100">{{ part.title }}</a>
+                    {% else %}
+                         <span class="px-3 py-2 border rounded-md text-sm bg-indigo-600 text-white">{{ part.title }}</span>
+                    {% endif %}
+               {% endfor %} 
+               
+               {% if paginate.next %}
+               <a href="{{ paginate.next.url }}" class="px-3 py-2 border rounded-md text-sm text-gray-600 hover:bg-gray-100">Next →</a>
+               {% endif %}
+          </nav>
+     </div>
