@@ -1,0 +1,88 @@
+<section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+  <!-- Page Heading -->
+  <header class="mb-10 text-center">
+    <h1 class="text-4xl font-bold text-gray-900 mb-3">{{ blog.title }}</h1>
+  </header>
+
+  <!-- Blog Grid -->
+{% paginate blog.articles by section.settings.posts_per_page %}
+     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+          {% for article in blog.articles %}
+               <!-- Blog Card -->
+               <article class="bg-white rounded-xl shadow-sm overflow-hidden hover:shadow-lg transition-shadow duration-300">
+                    {% if article.image %}
+                         <img 
+                              src="{{ article.image | image_url: width: 800 }}" 
+                              alt="{{ article.image.alt | escape }}" 
+                              class="w-full h-48 object-cover"
+                         />
+                    {% else %}
+                              <img src="https://placehold.co/600x400?text=No+Image" alt="Placeholder" class="w-full h-48 object-cover">
+
+                    {% endif %}
+                    <div class="p-6 flex flex-col">
+                    <h2 class="text-xl font-semibold text-gray-900 mb-2">{{ article.title }}</h2>
+                    <p class="text-gray-600 text-sm mb-4">
+                         {% assign excerpt_text = article.excerpt %}
+                         {% if excerpt_text == blank %}
+                         {% assign excerpt_text = article.content %}
+                         {% endif %}
+                         {{ excerpt_text | strip_html | truncatewords: 20 }}
+
+                    </p>
+                    <a href="{{ article.url }}" class="mt-auto inline-block text-indigo-600 hover:text-indigo-700 font-medium text-sm">
+                         Read more →
+                    </a>
+                    </div>
+               </article>
+          {% endfor %}
+    </div> 
+  <!-- Pagination -->
+  <div class="mt-10">
+     
+  
+     <nav class="mt-12 flex items-center justify-center space-x-2">
+          {% if paginate.previous %}
+          <a href="{{ paginate.previous.url }}" class="px-3 py-2 border rounded-md text-sm text-gray-600 hover:bg-gray-100">← Prev</a>
+          {% endif %}
+          {% for part in paginate.parts %}
+               {% if part.is_link %}
+                    <a href="{{ part.url }}" class="px-3 py-2 border rounded-md text-sm text-gray-600 hover:bg-gray-100">{{ part.title }}</a>
+               {% else %}
+                    <span class="px-3 py-2 border rounded-md text-sm bg-indigo-600 text-white">{{ part.title }}</span>
+               {% endif %}
+          {% endfor %} 
+          
+          {% if paginate.next %}
+          <a href="{{ paginate.next.url }}" class="px-3 py-2 border rounded-md text-sm text-gray-600 hover:bg-gray-100">Next →</a>
+          {% endif %}
+     </nav>
+</div>
+{% endpaginate %}
+  
+</section>
+
+
+
+{% schema %}
+{
+  "name": "Blog Template",
+  "settings": [
+    
+    {
+      "type": "range",
+      "id": "posts_per_page",
+      "label": "Articles per page",
+      "min": 1,
+      "max": 15,
+      "step": 1,
+      "default": 3
+    }
+  ],
+  "presets": [
+    {
+      "name": "Blog template"
+    }
+  ]
+}
+{% endschema %}
