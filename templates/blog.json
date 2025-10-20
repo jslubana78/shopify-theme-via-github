@@ -12,7 +12,7 @@
     "main-blog": {
       "type": "template-blog",
       "settings": {
-        "posts_per_page": 1
+        "posts_per_page": 3
       }
     }
   },
