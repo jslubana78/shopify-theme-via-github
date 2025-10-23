@@ -1,0 +1,144 @@
+{% if cart.item_count == 0 %}
+<!-- Cart is empty -->
+<div class="flex flex-col items-center justify-center text-center py-20 px-4">
+     <!-- Empty Cart Icon -->
+     <div class="mb-6">
+     <svg xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="1.5"
+          stroke="currentColor"
+          class="w-16 h-16 text-gray-400 mx-auto">
+          <path stroke-linecap="round" stroke-linejoin="round"
+               d="M2.25 2.25h1.386c.51 0 .955.343 1.091.836l.383 1.415M7.5 14.25h11.25a.75.75 0 00.724-.555l2.101-7.894A.75.75 0 0020.85 5.25H5.382m2.118 9l-1.5 6h12.75m-11.25 0a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zm11.25 0a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z" />
+     </svg>
+     </div>
+
+     <!-- Empty Cart Message -->
+     <h1 class="text-2xl font-semibold text-gray-800 mb-2">
+     Your cart is empty
+     </h1>
+     <p class="text-gray-500 mb-8">
+     Looks like you haven’t added anything to your cart yet.
+     </p>
+
+     <!-- Continue Shopping Button -->
+     <a href="{{ collections['all'].url }}"
+          class="inline-block bg-indigo-600 text-white px-6 py-3 rounded-lg text-sm font-medium hover:bg-indigo-700 transition">
+     Continue Shopping
+     </a>
+</div>
+{% else %}
+  <!-- Cart has items -->
+  <div class="max-w-5xl mx-auto px-4 py-12">
+  <!-- Page Title -->
+  <h1 class="text-3xl font-bold mb-8 text-gray-800">Your Cart</h1>
+  <form
+    action="{{  routes.cart_url }}"
+    method="post"
+    class="space-y-8" novalidate>
+  <!-- Cart Items -->
+  <div class="space-y-6">
+
+     {% for item in cart.items %}
+          <!-- Cart Item 1 -->
+          <div class="flex flex-col sm:flex-row items-center justify-between border-b pb-6">
+               <div class="flex items-center space-x-4 w-full sm:w-auto">
+                    <a href="{{ item.url }}">
+                         {% if item.image %}
+                              <img src="{{ item.image | image_url }}" alt="{{ item.image.alt | escape }}" class="w-20 h-20 rounded-lg object-cover">
+                         {% else %}
+                              {% comment %} {{ 'product-1' | placeholder_svg_tag }} {% endcomment %}
+                              {% render 'placeholder-image', class: 'w-20 h-20 rounded-lg' %}
+                         {% endif %}
+                    </a>
+                    
+                    <div>
+                         <a href="{{ item.url }}">
+                              <h2 class="text-lg font-medium text-gray-800">{{ item.product.title }}</h2>
+                         </a>
+                         {% if item.variant.title != 'Default Title' %}
+                              <p class="text-sm text-gray-500 mt-1">Variant: {{ item.variant.title }}</p>
+                              
+                         {% endif %}
+                         
+                         <p class="text-sm text-gray-600 mt-1">{{ item.final_price | money }}</p>
+                    </div>
+               </div>
+               <div class="flex items-center mt-4 sm:mt-0 space-x-4">
+               <div class="flex items-center border rounded-lg">
+                    <input type="number" name="updates[{{ item.key }}]" min="1" value="{{ item.quantity }}" class="w-10 text-center border-l border-r focus:outline-none">
+               </div>
+               <p class="text-gray-800 font-semibold">{{ item.final_line_price | money }}</p>
+               <button type="submit" name="updates[{{ item.key }}]" value="0" class="text-sm text-red-500 hover:underline">Remove</button>
+               </div>
+          </div>
+     {% endfor %}
+<button type="submit" class="w-full sm:w-auto text-center px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition">
+  Update Cart
+</button>
+    
+  </div>
+
+  <!-- Cart Summary (VERTICAL ALIGNMENT) -->
+  <div class="mt-10 border-t pt-6 flex flex-col items-start space-y-6">
+    
+
+    <div class="flex flex-col w-full sm:w-auto space-y-3">
+     {% for block in section.blocks %}
+          {% case block.type %}
+               {% when 'subtotal' %}
+               <div class="text-gray-600">
+               <p>Subtotal ({{ cart.item_count }} {% if cart.item_count == 1 %}item{% else %}items{% endif %}): <span class="text-lg font-semibold text-gray-800">{{ cart.total_price | money }}</span></p>
+               <p class="text-sm mt-1">Taxes and shipping calculated at checkout.</p>
+               </div>
+               {% when 'continue_shopping' %}
+                    <a href="{{ collections['all'].url }}"
+                         class="w-full sm:w-auto text-center px-6 py-3 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition">
+                         Continue Shopping
+                    </a>
+               {% when 'checkout' %}
+                    <a href="/checkout"
+                    class="w-full sm:w-auto text-center px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition">
+                    Checkout
+                    </a>
+          {% endcase %}
+     {% endfor %}
+          
+          
+          
+    </div>
+  </div>
+    </form>
+
+</div>
+{% endif %}
+
+
+
+{% schema %}
+{
+  "name": "Cart Summary d",
+  "blocks": [
+    { "type": "subtotal", "name": "Subtotal" },
+    { "type": "continue_shopping", "name": "Continue Shopping Button" },
+    { "type": "checkout", "name": "Checkout Button" }
+  ],
+  "presets": [
+    {
+      "name": "Cart Summary",
+      "category": "Cart",
+      "blocks": [
+        { "type": "subtotal" },
+        { "type": "continue_shopping" },
+        { "type": "checkout" }
+      ]
+    }
+  ],
+  "max_blocks": 3
+}
+{% endschema %}
+
+
+ 
+
