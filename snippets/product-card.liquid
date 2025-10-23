@@ -1,0 +1,29 @@
+<a href="{{ product.url }}" class="block group">
+  <div
+    class="bg-white rounded-lg shadow-md overflow-hidden transform transition-all duration-300 
+           group-hover:-translate-y-2 group-hover:shadow-2xl group-hover:ring-2 group-hover:ring-blue-500/20">
+    
+    <!-- Product Image -->
+    <div class="h-64 bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center">
+      {% if product.image %}
+        <img src="{{ product.image | img_url: 'medium' }}" alt="{{ product.title }}" class="h-full w-full object-cover" />
+      {% else %}
+        {{ 'product-1' | placeholder_svg_tag }}
+      {% endif %}
+    </div>
+
+    <!-- Product Info -->
+    <div class="p-6">
+      <h2 class="text-2xl font-semibold text-gray-800 mb-2 group-hover:text-blue-600 transition-colors">
+        {{ product.title }}
+      </h2>
+      {% if show_vendor_info == true %}
+      <p class="text-gray-600 mb-4">{{ product.vendor }}</p>
+     {% endif %}
+      <div class="flex items-center justify-between">
+        <span class="text-3xl font-bold text-blue-600">{{ product.price | money }}</span>
+      </div>
+    </div>
+
+  </div>
+</a>
