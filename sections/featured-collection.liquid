@@ -1,0 +1,83 @@
+<section class="py-16 bg-gray-50">
+  <div class="container mx-auto px-6 text-center">
+    {% if section.settings.heading != blank %}
+      <h2 class="text-4xl font-bold text-gray-800 mb-8">
+        {{ section.settings.heading }}
+      </h2>
+    {% endif %}
+
+    {% assign collection = collections[section.settings.collection] %}
+    {% if collection and collection.products.size > 0 %}
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        {% for product in collection.products limit: section.settings.products_to_show %}
+          <a href="{{ product.url }}" class="block group">
+            <div class="bg-white rounded-lg shadow hover:shadow-lg transition overflow-hidden">
+              {% if product.featured_image %}
+                <img 
+                  src="{{ product.featured_image | img_url: 'medium' }}" 
+                  alt="{{ product.title }}" 
+                  class="w-full h-64 object-cover group-hover:opacity-90 transition"
+                >
+              {% else %}
+                {{ 'product-1' | placeholder_svg_tag }}
+              {% endif %}
+              <div class="p-4">
+                <h3 class="text-lg font-semibold text-gray-800 mb-1">
+                  {{ product.title }}
+                </h3>
+
+                {% if section.settings.show_vendor %}
+                  <p class="text-gray-500 text-sm mb-2">{{ product.vendor }}</p>
+                {% endif %}
+
+                <p class="text-indigo-600 font-bold text-xl">
+                  {{ product.price | money }}
+                </p>
+              </div>
+            </div>
+          </a>
+        {% endfor %}
+      </div>
+    {% else %}
+      <p class="text-gray-500 mt-6">No products found in this collection.</p>
+    {% endif %}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Featured Collection",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Featured Products"
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Select Collection"
+    },
+    {
+      "type": "range",
+      "id": "products_to_show",
+      "label": "Products to Show",
+      "min": 1,
+      "max": 12,
+      "default": 4
+    },
+    {
+      "type": "checkbox",
+      "id": "show_vendor",
+      "label": "Show Vendor Info",
+      "default": true
+    }
+  ],
+  "presets": [
+    {
+      "name": "Featured Collection"
+    }
+  ]
+}
+{% endschema %}
