@@ -1,0 +1,38 @@
+<article class="max-w-3xl mx-auto py-12 px-4 prose prose-lg">
+  {% if section.settings.show_page_title %}
+    <h1 class="text-4xl font-bold text-gray-800 mb-6">{{ page.title }}</h1>
+  {% endif %}
+
+  {% if section.settings.show_feature_image and page.image %}
+    <img src="{{ page.image | image_url: width: 1200 }}" alt="{{ page.title | escape }}" class="rounded-lg mb-8 w-full object-cover">
+  {% endif %}
+
+  <div class="text-gray-700 leading-relaxed">
+    {{ page.content }}
+  </div>
+</article>
+
+{% schema %}
+{
+  "name": "Page Template",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_page_title",
+      "label": "Show page title",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_feature_image",
+      "label": "Show feature image (if available)",
+      "default": true
+    }
+  ],
+  "presets": [
+    {
+      "name": "Default Page"
+    }
+  ]
+}
+{% endschema %}
